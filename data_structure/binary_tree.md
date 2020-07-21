@@ -65,6 +65,17 @@ class Solution:
                 s.append(node.left)
         
         return preorder
+# # 递归
+# def get_prelist(root, res):
+#     if root is None:
+#         return
+#     res.append(root.val)
+#     get_prelist(root.left, res)
+#     get_prelist(root.right, res)
+#     return
+# res = []
+# get_prelist(root, res)
+# return res
 ```
 
 #### [中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
