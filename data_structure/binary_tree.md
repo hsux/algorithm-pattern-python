@@ -51,31 +51,38 @@ def postorder_rec(root):
 class Solution:
     def preorderTraversal(self, root: TreeNode) -> List[int]:
         
-        preorder = []
         if root is None:
-            return preorder
-        
-        s = [root]
-        while len(s) > 0:
-            node = s.pop()
-            preorder.append(node.val)
-            if node.right is not None:
-                s.append(node.right)
-            if node.left is not None:
-                s.append(node.left)
-        
-        return preorder
-# # 递归
-# def get_prelist(root, res):
-#     if root is None:
-#         return
-#     res.append(root.val)
-#     get_prelist(root.left, res)
-#     get_prelist(root.right, res)
-#     return
-# res = []
-# get_prelist(root, res)
-# return res
+            return []
+        prestack = []
+        prelist = []
+
+        prestack = [root]
+
+        while prestack :
+            node = prestack.pop()
+            # 两种写法
+            # prelist.append(node.val)
+            # if node.right is not None:
+            #     prestack.append(node.right)
+            # if node.left is not None:
+            #     prestack.append(node.left)
+            
+            if node:
+                prelist.append(node.val)
+                prestack.append(node.right)
+                prestack.append(node.left)
+        return prelist
+        # # 递归
+        # def get_prelist(root):
+        #     if root is None:
+        #         return
+        #     res.append(root.val)
+        #     get_prelist(root.left)
+        #     get_prelist(root.right)
+        #     return
+        # res = []
+        # get_prelist(root)
+        # return res
 ```
 
 #### [中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
