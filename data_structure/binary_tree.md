@@ -101,6 +101,38 @@ class Solution:
                 inorder.append(node.val)
                 node = node.right
         return inorder
+        # # 递归版本
+        # def get_inorder_list(root):
+        #     if root is None:
+        #         return
+        #     if root.left is not None:
+        #         get_inorder_list(root.left)
+        #     inorder_list.append(root.val)
+        #     if root.right is not None:
+        #         get_inorder_list(root.right)
+        #     return
+        # inorder_list = []
+        # get_inorder_list(root)
+        # return inorder_list
+
+        # 迭代版本
+        # 一直找到最左下的node，途经的一切left node全部入栈
+        # 出栈就visit，然后查是不是有right node，有就继续入栈所有left node
+        # 没有就接着出栈，visit
+        # def push_node(root):
+        #     if root is None:
+        #         return
+        #     left_stack.append(root)
+        #     push_node(root.left)
+        # left_stack = []
+        # inorder_list = []
+        # push_node(root)
+        # while left_stack:
+        #     node = left_stack.pop()
+        #     inorder_list.append(node.val)
+        #     if node.right is not None:
+        #         push_node(node.right)
+        # return inorder_list
 ```
 
 #### [后序非递归](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
@@ -126,6 +158,44 @@ class Solution:
         
         
         return postorder
+        
+                # # 递归版本
+        # def get_post_list(root):
+        #     if root is None:
+        #         return
+        #     if root.left is not None:
+        #         get_post_list(root.left)
+        #     if root.right is not None:
+        #         get_post_list(root.right)
+        #     post_list.append(root.val)
+        #     return
+        # post_list = []
+        # get_post_list(root)
+        # return post_list
+
+        # 迭代版本
+        # 最后visit，先探索左下，途经都入栈
+        # 如果有right node，就继续探索right node
+        # 如果没有right node，visit 当前node
+        def get_left_list(root):
+            if root is None:
+                return
+            left_list.append(root)
+            get_left_list(root.left)
+            
+        left_list = []
+        post_list = []
+        get_left_list(root)
+        while left_list:
+            tmp = left_list[-1]
+            while tmp.right is not None:  # 死循环，会重复查验right，这里待改
+                get_left_list(tmp.right)
+                tmp = left_list[-1]
+            # 如果没有right node就访问当前node
+            node = left_list.pop()
+            post_list.append(node.val)
+        return post_list
+        
 ```
 
 注意点
