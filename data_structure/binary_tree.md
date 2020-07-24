@@ -159,7 +159,7 @@ class Solution:
         
         return postorder
         
-                # # 递归版本
+        # # 递归版本
         # def get_post_list(root):
         #     if root is None:
         #         return
@@ -176,7 +176,7 @@ class Solution:
         # 迭代版本
         # 最后visit，先探索左下，途经都入栈
         # 如果有right node，就继续探索right node
-        # 如果没有right node，visit 当前node
+        # 如果没有right node或者刚刚visit过right node，visit 当前栈底node
         def get_left_list(root):
             if root is None:
                 return
@@ -185,15 +185,18 @@ class Solution:
             
         left_list = []
         post_list = []
-        get_left_list(root)
+        last_node = None
+        get_left_list(root)  # 探索到最左下
         while left_list:
             tmp = left_list[-1]
-            while tmp.right is not None:  # 死循环，会重复查验right，这里待改
-                get_left_list(tmp.right)
+            # 如果有right node，而且上一个visit的node不是tmp的right node防止重复入栈right tree
+            while tmp.right is not None and last_node != tmp.right:
+                get_left_list(tmp.right)  # 每个right仅探索一次，避免出栈后重复探索
                 tmp = left_list[-1]
-            # 如果没有right node就访问当前node
-            node = left_list.pop()
-            post_list.append(node.val)
+            # 如果没有right node或者已经visit过right node就访问当前栈底node（left node或者father）
+            # 即vist顺序为left-father 或者left-right-father
+            last_node = left_list.pop()
+            post_list.append(last_node.val)
         return post_list
         
 ```
