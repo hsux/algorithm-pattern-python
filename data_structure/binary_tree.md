@@ -83,6 +83,13 @@ class Solution:
         # res = []
         # get_prelist(root)
         # return res
+        
+        # Divide and conquer
+        if root is None:
+            return []
+        left = self.preorderTraversal(root.left)
+        right = self.preorderTraversal(root.right)
+        return [root.val]+left+right
 ```
 
 #### [中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
@@ -133,6 +140,14 @@ class Solution:
         #     if node.right is not None:
         #         push_node(node.right)
         # return inorder_list
+        
+        # divide &conquer
+        if root is None:
+            return []
+
+        left = self.inorderTraversal(root.left)
+        right = self.inorderTraversal(root.right)
+        return left+ [root.val]+right
 ```
 
 #### [后序非递归](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
@@ -199,6 +214,14 @@ class Solution:
             post_list.append(last_node.val)
         return post_list
         
+        #------divide&conquer---------
+        if root is None:
+            return []
+
+        left = self.postorderTraversal(root.left)
+        right = self.postorderTraversal(root.right)
+        return left+ right+[root.val]
+        
 ```
 
 注意点
@@ -262,11 +285,11 @@ class Solution:
 - 归并排序
 - 二叉树相关问题
 
-分治法模板
+分治法模板(对比层次遍历的代码看)
 
-- 递归返回条件
-- 分段处理
-- 合并结果
+- 递归返回条件( if root is None: return [] )
+- 分段处理   ( func(root.left);func(root.right) )
+- 合并结果   ( return [root.val]+left_vals+right_vals )
 
 常见题目示例
 
@@ -279,11 +302,13 @@ class Solution:
 ```Python
 class Solution:
     def maxDepth(self, root: TreeNode) -> int:
-        
+        # --递归返回条件--
         if root is None:
-            return 0
-        
-        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+            return 0  当前node为None则无深度
+        # --子树分别处理--,左右子树的最大深度
+        depth = max(self.maxDepth(root.left),self.maxDepth(root.right))
+        # 合并结果
+        return 1 + depth  # 子树最大深度加本层深度
 ```
 
 思路 2：层序遍历
@@ -296,15 +321,15 @@ class Solution:
         if root is None:
             return depth
         
-        bfs = collections.deque([root])
+        bfs = collections.deque([root])  # 双向队列
         
-        while len(bfs) > 0:
-            depth += 1
-            level_size = len(bfs)
+        while len(bfs) > 0:  # 如果本层有node
+            depth += 1  # 本层有node就深度加1
+            level_size = len(bfs)  # 本层有几个node
             for _ in range(level_size):
-                node = bfs.popleft()
+                node = bfs.popleft()  # 左侧出队
                 if node.left is not None:
-                    bfs.append(node.left)
+                    bfs.append(node.left)  # 右侧入队
                 if node.right is not None:
                     bfs.append(node.right)
         
@@ -320,20 +345,36 @@ class Solution:
 ```Python
 class Solution:
     def isBalanced(self, root: TreeNode) -> bool:
- 
-        def depth(root):
-            
-            if root is None:
-                return 0, True
-            
-            dl, bl = depth(root.left)
-            dr, br = depth(root.right)
-            
-            return max(dl, dr) + 1, bl and br and abs(dl - dr) < 2
-        
-        _, out = depth(root)
-        
-        return out
+        # # O(n),自底向上
+        # def check(root):
+        #     if root is None:
+        #         return 0, True
+
+        #     left_depth, left_label = check(root.left)
+        #     right_depth, right_label = check(root.right)
+        #     max_depth = max(left_depth, right_depth)
+        #     return 1 + max_depth, left_label and right_label and abs(left_depth-right_depth)<2
+        # depth, label = check(root)
+        # return label
+        # ----------------------------------------
+        # 树高
+        # 对二叉树做先序遍历，从底至顶返回子树最大高度，若判定某子树不是平衡树则 “剪枝” ，直接向上返回。
+        # 统计树高的过程中，计算高度差，一旦超过1，即一直返回-1表示不平衡，否则一直计算高度
+        return self.height(root) != -1
+
+    def height(self, root):
+        if root is None:
+            return 0  # 叶子平衡，高度为0
+        left = self.height(root.left)
+        if left == -1:
+            return -1
+        right = self.height(root.right)
+        if right == -1:
+            return -1
+        if abs(left-right)<2:
+            return max(left,right) + 1
+        else:
+            return -1
 ```
 
 思路 2：使用后序遍历实现分治法的迭代版本
@@ -369,7 +410,7 @@ class Solution:
         return True
 ```
 
-#### [binary-tree-maximum-path-sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+#### [binary-tree-maximum-path-sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/) (hard)
 
 > 给定一个**非空**二叉树，返回其最大路径和。
 
