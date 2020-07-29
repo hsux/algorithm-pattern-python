@@ -619,11 +619,7 @@ class Solution:
                 return True, float('-inf'),float('inf')   # left_max, right_min
             left,l_max,_ = isBST(root.left)
             right,_,r_min = isBST(root.right)
-            curr = True
-            if root.left:
-                curr = (l_max < root.val)
-            if root.right:
-                curr = (r_min > root.val)
+            curr = (l_max < root.val) and (r_min > root.val)
             root_max = max(l_max,root.val)
             root_min = min(r_min,root.val)
             return curr and left and right,root_max,root_min
