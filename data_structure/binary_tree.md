@@ -617,8 +617,8 @@ class Solution:
         def isBST(root):
             if root is None:
                 return True, float('-inf'),float('inf')   # left_max, right_min
-            left,l_max,l_min = isBST(root.left)
-            right,r_max,r_min = isBST(root.right)
+            left,l_max,_ = isBST(root.left)
+            right,_,r_min = isBST(root.right)
             curr = True
             if root.left:
                 curr = (l_max < root.val)
