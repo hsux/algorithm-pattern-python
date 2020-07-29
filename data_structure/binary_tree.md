@@ -614,15 +614,21 @@ class Solution:
         
         return valid_min_max(root)[0]
         # ---------------------------
+        # 节点的左子树只包含小于当前节点的数。
+        # 节点的右子树只包含大于当前节点的数。
+        # 所有左子树和右子树自身必须也是二叉搜索树
         def isBST(root):
-            if root is None:
+            if root is None:  # 递归条件
                 return True, float('-inf'),float('inf')   # left_max, right_min
-            left,l_max,_ = isBST(root.left)
-            right,_,r_min = isBST(root.right)
-            curr = (l_max < root.val) and (r_min > root.val)
-            root_max = max(l_max,root.val)
-            root_min = min(r_min,root.val)
-            return curr and left and right,root_max,root_min
+            # 处理左右子树
+            left,l_max,l_min = isBST(root.left)  # 是否为二叉搜索树，left的最大值，left的最小值
+            right,r_max,r_min = isBST(root.right)  # 是否为二叉搜索树，right的最大值，right的最小值
+            # 处理当前node
+            curr = (l_max < root.val) and (r_min > root.val)  # define
+            root_max = max(r_max,root.val)  # 当前子树的最大值
+            root_min = min(l_min,root.val)  # 当前子树的最min值
+            # 合并结果
+            return curr and left and right,root_max,root_min  # 是否为二叉搜索树，root的最大值，root的最小值
         return isBST(root)[0]
 ```
 
