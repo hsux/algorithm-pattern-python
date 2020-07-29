@@ -43,7 +43,7 @@ def postorder_rec(root):
     return
 ```
 
-#### [前序非递归](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+#### 144.[前序非递归](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
 
 本质上是图的DFS的一个特例，因此可以用栈来实现
 
@@ -92,7 +92,7 @@ class Solution:
         return [root.val]+left+right
 ```
 
-#### [中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+#### 94.[中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```Python
 class Solution:
@@ -150,7 +150,7 @@ class Solution:
         return left+ [root.val]+right
 ```
 
-#### [后序非递归](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+#### 145.[后序非递归](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
 
 ```Python
 class Solution:
@@ -247,7 +247,7 @@ class Solution:
 
 > DFS 深度搜索（从上到下） 和分治法区别：前者一般将最终结果通过指针参数传入，后者一般递归返回结果最后合并
 
-#### [BFS 层次遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+#### 102.[BFS 层次遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
 
 ```Python
 class Solution:
@@ -336,7 +336,7 @@ class Solution:
         return depth
 ```
 
-#### [balanced-binary-tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
+#### 110.[balanced-binary-tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
 
 > 给定一个二叉树，判断它是否是高度平衡的二叉树。
 
@@ -410,7 +410,7 @@ class Solution:
         return True
 ```
 
-#### [binary-tree-maximum-path-sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/) (hard)
+#### 124.[binary-tree-maximum-path-sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/) (hard)
 
 > 给定一个**非空**二叉树，返回其最大路径和。
 
@@ -435,9 +435,29 @@ class Solution:
         
         largest_path_ends_at(root)
         return self.maxPath
+        #---------------------------------------------------------
+        # 空节点的最大贡献值等于 0.
+        # 非空节点的最大贡献值等于节点值与其子节点中的最大贡献值之和（对于叶节点而言，最大贡献值等于节点值）.root+max(left,right)
+        # 该节点的最大路径和取决于该节点的值与该节点的左右子节点的最大贡献值. root+maxleft+maxright     
+        self.maxsum = float('-inf')
+        def maxnodesum(root):
+            if root is None:
+                return 0
+            # 分别计算子树的最大和
+            maxleft = max(maxnodesum(root.left),0)
+            maxright = max(maxnodesum(root.right),0)
+
+            # 计算该root子树下最大路径和
+            maxrootsum = maxleft + maxright + root.val  
+
+            self.maxsum = max(self.maxsum, maxrootsum)
+
+            return root.val + max(maxleft, maxright)
+        maxnodesum(root)
+        return self.maxsum
 ```
 
-#### [lowest-common-ancestor-of-a-binary-tree](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+#### 236.[lowest-common-ancestor-of-a-binary-tree](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)(medium)
 
 > 给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
 
@@ -464,11 +484,31 @@ class Solution:
             return right
         else:
             return None
+        # --------------------------------------
+        # 1.root is None: return False
+        # 2.搜索左子树是否包含二者之一;搜索右子树是否包含二者之一
+        # 3.根据公式找最近公共祖先(bool_left_son && bool_right_son) || [(root==q||root==p)&&(bool_left_son||bool_right_son)] 
+        # 4.合并结果,左右子树或者自己是否包含指定node
+        self.anc = root
+        def searchanc(root,p,q):  # 
+            # 递归条件
+            if root is None:  
+                return False  #子树可以有，自己可以是，否则是false
+            # 搜索左右子树是否包含目标node
+            left = searchanc(root.left,p,q)
+            right = searchanc(root.right,p,q)
+            # 根据公式找最近公共祖先,其他祖先只能是left或者right==true，且自己不可能是指定node
+            if ((left and right) or ((root==q or root==p) and (left or right))):
+                self.anc = root
+            # 合并结果,左右子树或者自己是否包含指定node
+            return left or right or (root==p or root==q)    
+        searchanc(root,p,q)
+        return self.anc     
 ```
 
 ### BFS 层次应用
 
-#### [binary-tree-zigzag-level-order-traversal](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)
+#### 103.[binary-tree-zigzag-level-order-traversal](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)(medium)
 
 > 给定一个二叉树，返回其节点值的锯齿形层次遍历。Z 字形遍历
 
@@ -510,11 +550,37 @@ class Solution:
             
         
         return levels
+        
+        #------------------------------------
+        if root is None:
+            return []
+        level_vals = []  # 记录遍历结果
+        stack = [root]  # 记录当前要遍历的层nodes
+        left_first = True  # 是否left node先入栈
+        while len(stack)>0:
+            tmp = []  # 临时记录下一层nodes的入栈结果
+            level_vals.append([])
+            for _ in range(len(stack)):
+                node = stack.pop()
+                level_vals[-1].append(node.val)
+                if left_first:
+                    if node.left is not None:
+                        tmp.append(node.left)
+                    if node.right is not None:
+                        tmp.append(node.right)
+                else:
+                    if node.right is not None:
+                        tmp.append(node.right)
+                    if node.left is not None:
+                        tmp.append(node.left)
+            left_first = not left_first
+            stack = tmp
+        return level_vals
 ```
 
 ### 二叉搜索树应用
 
-####  [validate-binary-search-tree](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+####  98.[validate-binary-search-tree](https://leetcode-cn.com/problems/validate-binary-search-tree/)(medium)
 
 > 给定一个二叉树，判断其是否是一个有效的二叉搜索树。
 
@@ -547,6 +613,21 @@ class Solution:
             return l_isValid and r_isValid and isValid, l_min, r_max
         
         return valid_min_max(root)[0]
+        # ---------------------------
+        def isBST(root):
+            if root is None:
+                return True, float('-inf'),float('inf')   # left_max, right_min
+            left,l_max,l_min = isBST(root.left)
+            right,r_max,r_min = isBST(root.right)
+            curr = True
+            if root.left:
+                curr = (l_max < root.val)
+            if root.right:
+                curr = (r_min > root.val)
+            root_max = max(l_max,root.val)
+            root_min = min(r_min,root.val)
+            return curr and left and right,root_max,root_min
+        return isBST(root)[0]
 ```
 
 思路 3：利用二叉搜索树的性质，根结点为左子树的右边界，右子树的左边界，使用先序遍历自顶向下更新左右子树的边界并检查是否合法，迭代版本实现简单且可以提前返回结果。
