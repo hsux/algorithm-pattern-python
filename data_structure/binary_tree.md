@@ -43,7 +43,7 @@ def postorder_rec(root):
     return
 ```
 
-#### 144.[前序非递归](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+#### 144.[前序非递归](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)(medium)
 
 本质上是图的DFS的一个特例，因此可以用栈来实现
 
@@ -72,19 +72,19 @@ class Solution:
                 prestack.append(node.right)
                 prestack.append(node.left)
         return prelist
-        # # 递归
-        # def get_prelist(root):
-        #     if root is None:
-        #         return
-        #     res.append(root.val)
-        #     get_prelist(root.left)
-        #     get_prelist(root.right)
-        #     return
-        # res = []
-        # get_prelist(root)
-        # return res
+        # ------递归--------------
+        def get_prelist(root):
+            if root is None:
+                return
+            res.append(root.val)
+            get_prelist(root.left)
+            get_prelist(root.right)
+            return
+        res = []
+        get_prelist(root)
+        return res
         
-        # Divide and conquer
+        # --------Divide and conquer----------
         if root is None:
             return []
         left = self.preorderTraversal(root.left)
@@ -92,7 +92,7 @@ class Solution:
         return [root.val]+left+right
 ```
 
-#### 94.[中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+#### 94.[中序非递归](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)(medium)
 
 ```Python
 class Solution:
@@ -108,40 +108,40 @@ class Solution:
                 inorder.append(node.val)
                 node = node.right
         return inorder
-        # # 递归版本
-        # def get_inorder_list(root):
-        #     if root is None:
-        #         return
-        #     if root.left is not None:
-        #         get_inorder_list(root.left)
-        #     inorder_list.append(root.val)
-        #     if root.right is not None:
-        #         get_inorder_list(root.right)
-        #     return
-        # inorder_list = []
-        # get_inorder_list(root)
-        # return inorder_list
+        # -------递归版本--------
+        def get_inorder_list(root):
+            if root is None:
+                return
+            if root.left is not None:
+                get_inorder_list(root.left)
+            inorder_list.append(root.val)
+            if root.right is not None:
+                get_inorder_list(root.right)
+            return
+        inorder_list = []
+        get_inorder_list(root)
+        return inorder_list
 
-        # 迭代版本
-        # 一直找到最左下的node，途经的一切left node全部入栈
-        # 出栈就visit，然后查是不是有right node，有就继续入栈所有left node
-        # 没有就接着出栈，visit
-        # def push_node(root):
-        #     if root is None:
-        #         return
-        #     left_stack.append(root)
-        #     push_node(root.left)
-        # left_stack = []
-        # inorder_list = []
-        # push_node(root)
-        # while left_stack:
-        #     node = left_stack.pop()
-        #     inorder_list.append(node.val)
-        #     if node.right is not None:
-        #         push_node(node.right)
-        # return inorder_list
+        # ------------迭代版本-----------------
+        一直找到最左下的node，途经的一切left node全部入栈
+        出栈就visit，然后查是不是有right node，有就继续入栈所有left node
+        没有就接着出栈，visit
+        def push_node(root):
+            if root is None:
+                return
+            left_stack.append(root)
+            push_node(root.left)
+        left_stack = []
+        inorder_list = []
+        push_node(root)
+        while left_stack:
+            node = left_stack.pop()
+            inorder_list.append(node.val)
+            if node.right is not None:
+                push_node(node.right)
+        return inorder_list
         
-        # divide &conquer
+        # ---------divide & conquer-------
         if root is None:
             return []
 
@@ -150,7 +150,7 @@ class Solution:
         return left+ [root.val]+right
 ```
 
-#### 145.[后序非递归](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)
+#### 145.[后序非递归](https://leetcode-cn.com/problems/binary-tree-postorder-traversal/)(hard)
 
 ```Python
 class Solution:
@@ -174,21 +174,21 @@ class Solution:
         
         return postorder
         
-        # # 递归版本
-        # def get_post_list(root):
-        #     if root is None:
-        #         return
-        #     if root.left is not None:
-        #         get_post_list(root.left)
-        #     if root.right is not None:
-        #         get_post_list(root.right)
-        #     post_list.append(root.val)
-        #     return
-        # post_list = []
-        # get_post_list(root)
-        # return post_list
+        # ----------递归版本-------------
+        def get_post_list(root):
+            if root is None:
+                return
+            if root.left is not None:
+                get_post_list(root.left)
+            if root.right is not None:
+                get_post_list(root.right)
+            post_list.append(root.val)
+            return
+        post_list = []
+        get_post_list(root)
+        return post_list
 
-        # 迭代版本
+        # ------------迭代版本------------
         # 最后visit，先探索左下，途经都入栈
         # 如果有right node，就继续探索right node
         # 如果没有right node或者刚刚visit过right node，visit 当前栈底node
@@ -214,7 +214,7 @@ class Solution:
             post_list.append(last_node.val)
         return post_list
         
-        #------divide&conquer---------
+        #------ divide & conquer ---------
         if root is None:
             return []
 
@@ -247,7 +247,7 @@ class Solution:
 
 > DFS 深度搜索（从上到下） 和分治法区别：前者一般将最终结果通过指针参数传入，后者一般递归返回结果最后合并
 
-#### 102.[BFS 层次遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+#### 102.[BFS 层次遍历](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)(medium)
 
 ```Python
 class Solution:
@@ -293,7 +293,7 @@ class Solution:
 
 常见题目示例
 
-#### [maximum-depth-of-binary-tree](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+#### 104.[maximum-depth-of-binary-tree](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)(easy)
 
 > 给定一个二叉树，找出其最大深度。
 
@@ -336,7 +336,7 @@ class Solution:
         return depth
 ```
 
-#### 110.[balanced-binary-tree](https://leetcode-cn.com/problems/balanced-binary-tree/)
+#### 110.[balanced-binary-tree](https://leetcode-cn.com/problems/balanced-binary-tree/)(easy)
 
 > 给定一个二叉树，判断它是否是高度平衡的二叉树。
 
@@ -345,21 +345,23 @@ class Solution:
 ```Python
 class Solution:
     def isBalanced(self, root: TreeNode) -> bool:
-        # # O(n),自底向上
-        # def check(root):
-        #     if root is None:
-        #         return 0, True
+        # --------O(n),自底向上-----------
+        def check(root):
+            if root is None:
+                return 0, True
 
-        #     left_depth, left_label = check(root.left)
-        #     right_depth, right_label = check(root.right)
-        #     max_depth = max(left_depth, right_depth)
-        #     return 1 + max_depth, left_label and right_label and abs(left_depth-right_depth)<2
-        # depth, label = check(root)
-        # return label
-        # ----------------------------------------
-        # 树高
-        # 对二叉树做先序遍历，从底至顶返回子树最大高度，若判定某子树不是平衡树则 “剪枝” ，直接向上返回。
-        # 统计树高的过程中，计算高度差，一旦超过1，即一直返回-1表示不平衡，否则一直计算高度
+            left_depth, left_label = check(root.left)
+            right_depth, right_label = check(root.right)
+            max_depth = max(left_depth, right_depth)
+            return 1 + max_depth, left_label and right_label and abs(left_depth-right_depth)<2
+        depth, label = check(root)
+        return label
+        
+        #----------------------------------------
+        树高
+        对二叉树做先序遍历，从底至顶返回子树最大高度，若判定某子树不是平衡树则 “剪枝” ，直接向上返回。
+        统计树高的过程中，计算高度差，一旦超过1，即一直返回-1表示不平衡，否则一直计算高度
+
         return self.height(root) != -1
 
     def height(self, root):
@@ -435,6 +437,7 @@ class Solution:
         
         largest_path_ends_at(root)
         return self.maxPath
+        
         #---------------------------------------------------------
         # 空节点的最大贡献值等于 0.
         # 非空节点的最大贡献值等于节点值与其子节点中的最大贡献值之和（对于叶节点而言，最大贡献值等于节点值）.root+max(left,right)
@@ -484,6 +487,7 @@ class Solution:
             return right
         else:
             return None
+            
         # --------------------------------------
         # 1.root is None: return False
         # 2.搜索左子树是否包含二者之一;搜索右子树是否包含二者之一
@@ -613,6 +617,7 @@ class Solution:
             return l_isValid and r_isValid and isValid, l_min, r_max
         
         return valid_min_max(root)[0]
+        
         # ---------------------------
         # 节点的左子树只包含小于当前节点的数。
         # 节点的右子树只包含大于当前节点的数。
@@ -653,9 +658,30 @@ class Solution:
                     return False
                 s.append((node.right, node.val, up))
         return True
+        
+        # ----------迭代，更快，可以中途结束---------
+        # 二叉搜索树的node值是left的上限，right的下限
+        # 遍历整个树，验证上一条定理
+        if root is None:
+            return True
+        stack = [(root,-inf,inf)]
+        while len(stack)>0:
+            node,low,up = stack.pop()
+            if node.left is not None:
+                # left.son要比当前node.val小，但是如果是位于某祖先的right要大于low
+                if node.left.val >= node.val or node.left.val <= low:
+                    return False
+                stack.append((node.left, low, node.val))  # left<node.val
+            if node.right is not None:
+                # right.son要比当前node.val大，但是如果是位于某祖先的left要小于up
+                if node.right.val <= node.val or node.right.val >= up:
+                    return False
+                stack.append((node.right, node.val, up))  # right > node.val
+        return True
+
 ```
 
-#### [insert-into-a-binary-search-tree](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
+#### 701.[insert-into-a-binary-search-tree](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)(medium)
 
 > 给定二叉搜索树（BST）的根节点和要插入树中的值，将值插入二叉搜索树。 返回插入后二叉搜索树的根节点。
 
@@ -665,23 +691,59 @@ class Solution:
 class Solution:
     def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode:
         
+        # 二叉搜索树的巨大优势就是：在平均情况下，能够在 O(log⁡N) 的时间内完成搜索和插入元素。
+        # 二叉搜索树的插入方法非常简单，我们将插入的节点作为叶子节点的子节点插入。插入到哪个叶节点可以遵循以下原则：
+        #    若 val > node.val，插入到右子树。
+        #    若 val < node.val，插入到左子树。
+        # Recursive.
+        
+        def insert_node(root, val):
+            if root.val > val:
+                if root.left is None:
+                    root.left = TreeNode(val)
+                    return
+                else:
+                    insert_node(root.left,val)
+            if root.val < val:
+                if root.right is None:
+                    root.right = TreeNode(val)
+                    return
+                else:
+                    insert_node(root.right,val)
+        if root is None:
+            root = TreeNode(val)
+        else:
+            insert_node(root,val)
+        return root
+
+        # ---------------Recursive2---------------
+        if root is None:  # 递归条件：没有node就创建
+            return TreeNode(val)
+        # 处理左右子树
+        if root.val > val:  
+            root.left = self.insertIntoBST(root.left,val)
+        if root.val < val:
+            root.right = self.insertIntoBST(root.right,val)
+        return root  # return node
+
+        # -------------------Iterate.-------------------
+        # 搜索只有一条路线
         if root is None:
             return TreeNode(val)
-        
         node = root
         while True:
-            if val > node.val:
-                if node.right is None:
-                    node.right = TreeNode(val)
-                    return root
+            if node.val > val:  #left tree
+                if node.left:
+                    node = node.left
                 else:
-                    node = node.right
-            else:
-                if node.left is None:
                     node.left = TreeNode(val)
                     return root
+            if node.val < val:  # right tree
+                if node.right:
+                    node = node.right
                 else:
-                    node = node.left
+                    node.right = TreeNode(val)
+                    return root
 ```
 
 ## 总结
