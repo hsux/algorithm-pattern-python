@@ -15,29 +15,42 @@
 
 ## 常见题型
 
-### [remove-duplicates-from-sorted-list](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)
+### 83.[remove-duplicates-from-sorted-list](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)(easy)
 
 > 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
 
 ```Python
 class Solution:
     def deleteDuplicates(self, head: ListNode) -> ListNode:
-        
+        # 两个指针，如果快指针与慢指针val同，快指针再进一步，慢指针.next指向快指针
         if head is None:
             return head
-        
-        current = head
-        
-        while current.next is not None:
-            if current.next.val == current.val:
-                current.next = current.next.next
+        quick, slow = head.next, head
+
+        while (quick is not None):
+            # 如果重复，quick指向下一个node，slow连接到quick
+            if quick.val == slow.val:
+                quick = quick.next
+                slow.next = quick
+
+            else:  # 如果不重复，slow走到quick，quick指向下一个node
+                slow = quick
+                quick = quick.next
+        return head
+
+        # -------------一个指针--------------
+        if head is None:
+            return head
+        curr = head
+        while (curr.next is not None):
+            if curr.next.val == curr.val:
+                curr.next = curr.next.next
             else:
-                current = current.next
-        
+                curr = curr.next
         return head
 ```
 
-### [remove-duplicates-from-sorted-list-ii](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)
+### 82.[remove-duplicates-from-sorted-list-ii](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)(medium)
 
 > 给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中   没有重复出现的数字。
 
