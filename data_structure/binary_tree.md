@@ -763,3 +763,35 @@ class Solution:
 - [ ] 103.[binary-tree-zigzag-level-order-traversal](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)(medium)
 - [ ] 98.[validate-binary-search-tree](https://leetcode-cn.com/problems/validate-binary-search-tree/)(medium)
 - [ ] 701.[insert-into-a-binary-search-tree](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)(medium)
+
+### 题解 
+
+#### 107.[binary-tree-level-order-traversal-ii](https://leetcode-cn.com/problems/binary-tree-level-order-traversal-ii/)(easy)
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def levelOrderBottom(self, root: TreeNode) -> List[List[int]]:
+        # 与层次遍历一样，但是保存从头插入
+        if root is None:
+            return []
+        level_vals = collections.deque()  # 倒装
+        stack = collections.deque([root])  # deque比queue效率高
+        while len(stack)>0:
+            num = len(stack)
+            level_vals.appendleft([])  # 从头添加
+            for _ in range(num):
+                node = stack.popleft()  # 左出右进
+                level_vals[0].append(node.val)
+                if node.left is not None:
+                    stack.append(node.left)
+                if node.right is not None:
+                    stack.append(node.right)
+        return list(level_vals)
+```
