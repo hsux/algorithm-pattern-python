@@ -84,20 +84,21 @@ class Solution:
         
         return dummy.next
 	# --------------------
-	if head is None:
+        if head is None:
             return head
         dummpy = ListNode(0)
         dummpy.next = head
 
-        last = dummpy
+        last = dummpy  # dummpy链表中不重复的最后一个node
         quick = head
-        while quick.next:
-            while quick.val == quick.next.val:
-                quick = quick.next
-            else:
-                last.next = quick
-                last = quick
-                quick = quick.next
+        while quick:
+            while quick.next and quick.val == quick.next.val:
+                quick = quick.next  # 一直找到不重复的那个node的前一个
+            if last.next == quick:  # quick与其后next无重复
+                last = last.next  # last后移一位
+            else:  # 如果中间有重复的，就跳过
+                last.next = quick.next
+            quick = quick.next  # 继续判断之后的节点是否重复
         return dummpy.next
 ```
 
