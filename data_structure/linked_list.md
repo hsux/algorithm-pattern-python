@@ -83,6 +83,22 @@ class Solution:
             current.next = current.next.next
         
         return dummy.next
+	# --------------------
+	if head is None:
+            return head
+        dummpy = ListNode(0)
+        dummpy.next = head
+
+        last = dummpy
+        quick = head
+        while quick.next:
+            while quick.val == quick.next.val:
+                quick = quick.next
+            else:
+                last.next = quick
+                last = quick
+                quick = quick.next
+        return dummpy.next
 ```
 
 注意点
