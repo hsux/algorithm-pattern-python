@@ -90,15 +90,17 @@ class Solution:
         dummpy.next = head
 
         last = dummpy  # dummpy链表中不重复的最后一个node
-        quick = head
+        quick = head  # 指向待查链表的第一个node
         while quick:
+	    # 如果有重复则找到最后一个重复的node
             while quick.next and quick.val == quick.next.val:
                 quick = quick.next  # 一直找到不重复的那个node的前一个
-            if last.next == quick:  # quick与其后next无重复
-                last = last.next  # last后移一位
-            else:  # 如果中间有重复的，就跳过
-                last.next = quick.next
-            quick = quick.next  # 继续判断之后的节点是否重复
+	    # 如果待查链表的第一个node与其后没有重复
+            if last.next == quick:  # quick此时指向不重复的尾node
+                last = last.next  # last后移一位，指向新的不重复尾node
+            else:  # 如果中间有重复的，跳过重复node
+                last.next = quick.next  # quick此时指向被跳过的最后一个重复的node
+            quick = quick.next  # quick指向待查链表的第一个node
         return dummpy.next
 ```
 
