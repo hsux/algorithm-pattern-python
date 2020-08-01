@@ -109,7 +109,7 @@ class Solution:
 • 删除用一个 Dummy Node 节点辅助（允许头节点可变）
 • 访问 X.next 、X.value 一定要保证 X != nil
 
-### [reverse-linked-list](https://leetcode-cn.com/problems/reverse-linked-list/)
+### 206.[reverse-linked-list](https://leetcode-cn.com/problems/reverse-linked-list/)(easy)
 
 > 反转一个单链表。
 
@@ -119,18 +119,14 @@ class Solution:
 class Solution:
     def reverseList(self, head: ListNode) -> ListNode:
         
-        if head is None:
-            return head
-        
-        tail = head
-        while tail.next is not None:
-            # put tail.next to head  
-            tmp = tail.next
-            tail.next = tail.next.next
-            tmp.next = head
-            head = tmp
-        
-        return head
+        new_head = None  # 新链表的头结点
+        old_tail = head  # 待翻转的链表的‘第一个’node
+        while old_tail:  # 如果待反转链表还有node
+            tmp = old_tail.next  # 暂存之后的链表
+            old_tail.next = new_head  # 反转当前node方向
+            new_head = old_tail  # 更新新链表头node
+            old_tail = tmp  # 指向下一个待处理node
+        return new_head
 ```
 - Recursive method is tricky
 ```Python
@@ -140,14 +136,14 @@ class Solution:
         if head is None or head.next is None:
             return head
         
-        rev_next = self.reverseList(head.next)
-        head.next.next = head
-        head.next = None
+        rev_next = self.reverseList(head.next)  # 返回最后一个node作为新head
+        head.next.next = head  # 将下一个node的next指向自己，两个node间形成互相指向
+        head.next = None  # 反转当前node的指向，指向None，如果是最后一个node就正好指向None，其他的会再指向前一个ndoe
         
-        return rev_next
+        return rev_next 
 ```
 
-### [reverse-linked-list-ii](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
+### 92.[reverse-linked-list-ii](https://leetcode-cn.com/problems/reverse-linked-list-ii/)(medium)
 
 > 反转从位置  *m*  到  *n*  的链表。请使用一趟扫描完成反转。
 
