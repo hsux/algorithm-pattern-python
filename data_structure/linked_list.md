@@ -529,15 +529,15 @@ class Solution:
 
 ## 练习
 
-- [ ] [remove-duplicates-from-sorted-list](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)
-- [ ] [remove-duplicates-from-sorted-list-ii](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)
-- [ ] [reverse-linked-list](https://leetcode-cn.com/problems/reverse-linked-list/)
-- [ ] [reverse-linked-list-ii](https://leetcode-cn.com/problems/reverse-linked-list-ii/)
-- [ ] [merge-two-sorted-lists](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
-- [ ] [partition-list](https://leetcode-cn.com/problems/partition-list/)
-- [ ] [sort-list](https://leetcode-cn.com/problems/sort-list/)
-- [ ] [reorder-list](https://leetcode-cn.com/problems/reorder-list/)
-- [ ] [linked-list-cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
-- [ ] [linked-list-cycle-ii](https://leetcode-cn.com/problems/https://leetcode-cn.com/problems/linked-list-cycle-ii/)
-- [ ] [palindrome-linked-list](https://leetcode-cn.com/problems/palindrome-linked-list/)
-- [ ] [copy-list-with-random-pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+- [ ] 83.[remove-duplicates-from-sorted-list](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/)(easy)
+- [ ] 82.[remove-duplicates-from-sorted-list-ii](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/)(medium)
+- [ ] 206.[reverse-linked-list](https://leetcode-cn.com/problems/reverse-linked-list/)(easy)
+- [ ] 92.[reverse-linked-list-ii](https://leetcode-cn.com/problems/reverse-linked-list-ii/)(medium)
+- [ ] 21.[merge-two-sorted-lists](https://leetcode-cn.com/problems/merge-two-sorted-lists/)(easy)
+- [ ] 86.[partition-list](https://leetcode-cn.com/problems/partition-list/)(medium)
+- [ ] 148.[sort-list](https://leetcode-cn.com/problems/sort-list/)(medium)
+- [ ] 143.[reorder-list](https://leetcode-cn.com/problems/reorder-list/)(medium)
+- [ ] 141.[linked-list-cycle](https://leetcode-cn.com/problems/linked-list-cycle/)(easy)
+- [ ] 142.[linked-list-cycle-ii](https://leetcode-cn.com/problems/https://leetcode-cn.com/problems/linked-list-cycle-ii/)()medium
+- [ ] 234.[palindrome-linked-list](https://leetcode-cn.com/problems/palindrome-linked-list/)(easy)
+- [ ] 138.[copy-list-with-random-pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)(medium)
