@@ -152,28 +152,31 @@ class Solution:
 ```Python
 class Solution:
     def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
-        
+
         if head is None:
             return head
-        
-        n -= m # number of times of reverse
-        
-        curr = dummy = ListNode(next=head)
-        while m > 1: # find node at m - 1
-            curr = curr.next
+        n = n - m  # 反转数量
+        dummy = ListNode(0)
+        dummy.next = head
+        curr = dummy
+        while m > 1:
+            # find node at m-1
+            curr = curr.next  # 1->2->3->4->5->6->None
             m -= 1
-        
-        start = curr.next
-        while n > 0: # reverse n - m times
-            tmp = start.next
-            start.next = tmp.next
-            tmp.next = curr.next
+        start = curr.next  # node m
+        # 依次把(m,n]node挪到curr.next上
+        # start一直指向node m， start.next一直指向下一个需要挪到curr.next的node
+        while n > 0:  
+            tmp = start.next  # tmp保留当前需要挪到curr.next的node
+            start.next = tmp.next  # start.next指向下一次循环需要挪到curr.next的node
+            # 当前node挪到curr.next之后
+            tmp.next = curr.next  
             curr.next = tmp
             n -= 1
         return dummy.next
 ```
 
-### [merge-two-sorted-lists](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+### 21.[merge-two-sorted-lists](https://leetcode-cn.com/problems/merge-two-sorted-lists/)(easy)
 
 > 将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
 
@@ -182,57 +185,54 @@ class Solution:
 ```Python
 class Solution:
     def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
-        
-        tail = dummy = ListNode()
-        while l1 is not None and l2 is not None:
-            if l1.val > l2.val:
-                tail.next = l2
-                l2 = l2.next
-            else:
-                tail.next = l1
-                l1 = l1.next
-            tail = tail.next
-                
-        if l1 is None:
-            tail.next = l2
-        else:
-            tail.next = l1
+        dummy = ListNode(0)  # 设置头结点
+        curr = dummy
 
+        while l1 and l2:  # 如果两个都有node
+            if l1.val <= l2.val:
+                curr.next = l1 # 并入
+                l1 = l1.next # 指向下一个待处理node
+            else:
+                curr.next = l2  # 并入
+                l2 = l2.next  # 指向下一个待处理node
+            curr = curr.next  # 指向合并链表的tail node
+        curr.next = l1 if l2 is None else l2  # 如果其中一个链表并完，就直接把另一个并入
         return dummy.next
 ```
 
-### [partition-list](https://leetcode-cn.com/problems/partition-list/)
+### 86.[partition-list](https://leetcode-cn.com/problems/partition-list/)(medium)
 
 > 给定一个链表和一个特定值 x，对链表进行分隔，使得所有小于  *x*  的节点都在大于或等于  *x*  的节点之前。
 
 思路：将大于 x 的节点，放到另外一个链表，最后连接这两个链表
 
-```go
+```python
 class Solution:
     def partition(self, head: ListNode, x: int) -> ListNode:
-        
-        p = l = ListNode()
-        q = s = ListNode(next=head)
-        
-        while q.next is not None:
-            if q.next.val < x:
-                q = q.next
-            else:
-                p.next = q.next
-                q.next = q.next.next
-                p = p.next
-        
-        p.next = None
-        q.next = l.next
-        
-	return s.next
+        # 分为两个链表再拼接
+        low = ListNode(0)
+        high = ListNode(0)
+        low_curr = low
+        high_curr = high
+
+        while head:
+            if head.val < x:  # 小于
+                low_curr.next = head
+                low_curr = low_curr.next
+            else:  #大于等于
+                high_curr.next = head
+                high_curr = high_curr.next
+            head = head.next
+        low_curr.next = high.next
+        high_curr.next = None  # 尾部是None
+        return low.next
 ```
 
 哑巴节点使用场景
 
 > 当头节点不确定的时候，使用哑巴节点
 
-### [sort-list](https://leetcode-cn.com/problems/sort-list/)
+### 148.[sort-list](https://leetcode-cn.com/problems/sort-list/)(medium)
 
 > 在  *O*(*n* log *n*) 时间复杂度和常数级空间复杂度下，对链表进行排序。
 
@@ -240,52 +240,48 @@ class Solution:
 
 ```Python
 class Solution:
-    
-    def _merge(self, l1, l2):
-        tail = l_merge = ListNode()
-        
-        while l1 is not None and l2 is not None:
-            if l1.val > l2.val:
-                tail.next = l2
-                l2 = l2.next
-            else:
-                tail.next = l1
-                l1 = l1.next
-            tail = tail.next
-
-        if l1 is not None:
-            tail.next = l1
-        else:
-            tail.next = l2
-        
-        return l_merge.next
-    
-    def _findmid(self, head):
-        slow, fast = head, head.next
-        while fast is not None and fast.next is not None:
-            fast = fast.next.next
-            slow = slow.next
-        
-        return slow
-    
     def sortList(self, head: ListNode) -> ListNode:
+        # 归并排序，空间复杂度O(n)
+        def findmid(head):
+            # 快慢指针找中点, O(nlogn * 1/2)
+            slow, fast = head, head.next
+            while fast is not None and fast.next is not None:
+                slow = slow.next  # 走一步
+                fast = fast.next.next  # 走两步
+            return slow
+
+        def merge(h1, h2):  # 
+            dummy = ListNode(0)
+            curr = dummy
+            while h1 and h2:
+                if h1.val <= h2.val:
+                    curr.next = h1
+                    h1 = h1.next
+                else:
+                    curr.next = h2
+                    h2 = h2.next
+                curr = curr.next  # O(n)
+            curr.next = h1 if h2 is None else h2
+            return dummy.next
+                
+        # 递归条件
         if head is None or head.next is None:
             return head
-        
-        mid = self._findmid(head)
-        tail = mid.next
-        mid.next = None # break from middle
-        
-        return self._merge(self.sortList(head), self.sortList(tail))
+        # 处理分支，分成两个链表
+        mid = findmid(head)
+        h2 = mid.next
+        mid.next = None
+        # 合并结果
+        return merge(self.sortList(head), self.sortList(h2))  # O(n) + 2T(n/2)
 ```
 
 注意点
 
-- 快慢指针 判断 fast 及 fast.Next 是否为 nil 值
-- 递归 mergeSort 需要断开中间节点
-- 递归返回条件为 head 为 nil 或者 head.Next 为 nil
+- 快慢指针 判断 fast 及 fast.Next 是否为 nil 值，单node不用找mid
+- 递归 mergeSort 需要断开中间节点，补一个None
+- 递归返回条件为 head 为 nil 或者 head.Next 为 nil，单node不用找mid
 
-### [reorder-list](https://leetcode-cn.com/problems/reorder-list/)
+### 143.[reorder-list](https://leetcode-cn.com/problems/reorder-list/)(medium)
 
 > 给定一个单链表  *L*：*L*→*L*→…→*L\_\_n*→*L*
 > 将其重新排列后变为： *L*→*L\_\_n*→*L*→*L\_\_n*→*L*→*L\_\_n*→…
@@ -329,9 +325,39 @@ class Solution:
             m = p
             
         return
+    # ----------------------------------------
+    def reorderList(self, head: ListNode) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        # 先都入栈，统计数量，找到中心点
+        # 出栈得到尾部node，与head拼接
+        # 中心点.next = None
+        if head is None:
+            return head
+        stack = []
+        p = head
+        while p:
+            stack.append(p)
+            p = p.next
+        cnt = len(stack)
+        # 1-2-3-4-5 => 1-5-2-4-3
+        # 1-2-3-4-5-6 => 1-6-2-5-3-4
+        # 可知，后半部即弹出的应该是小于等于一半的数量
+        mid = cnt//2
+        p = head
+        while mid:
+            tmp = stack.pop()  # 尾node
+            tmp.next = p.next  # 插入到前半截
+            p.next = tmp
+            p = tmp.next  # 指向前半截的下一个待插入节点
+            mid -= 1
+        # 奇数个node，最后p指向前半截最后的node
+        # 偶数个node，最后p指向tmp即后半截的第一个node，因为tmp.next == tmp 
+        p.next = None  
 ```
 
-### [linked-list-cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
+### 141.[linked-list-cycle](https://leetcode-cn.com/problems/linked-list-cycle/)(easy)
 
 > 给定一个链表，判断链表中是否有环。
 
@@ -342,19 +368,18 @@ class Solution:
 ```Python
 class Solution:
     def hasCycle(self, head: ListNode) -> bool:
-        
-        slow = fast = head
-        
-        while fast is not None and fast.next is not None:
-            slow = slow.next
-	    fast = fast.next.next
-            if fast == slow:
+        # 快慢指针,空间O(1)，时间O(n)
+        q1 = head
+        q2 = head
+        while q2 and q2.next:
+            q2 = q2.next.next
+            q1 = q1.next
+            if q2 == q1:
                 return True
-        
         return False
 ```
 
-### [linked-list-cycle-ii](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+### 142.[linked-list-cycle-ii](https://leetcode-cn.com/problems/linked-list-cycle-ii/)(medium)
 
 > 给定一个链表，返回链表开始入环的第一个节点。  如果链表无环，则返回  `null`。
 
@@ -364,21 +389,22 @@ class Solution:
 ```Python
 class Solution:
     def detectCycle(self, head: ListNode) -> ListNode:
+        # 首先假设头结点到环入口的距离为L，环的长度为C，而且L<=C，那么：
+        # 1、当慢指针到达环入口时，快指针比它多走L，即快指针需再多走C-L才能相遇；
+        # 2、由于v(快)-v(慢)=1，故相遇时慢指针又走了C-L，此时它与环起点距离为C-(C-L)=L；
+        # 至于L>C的情况，其实可看作先将L不断减去C直到L<=C ，就相当于快指针先在环内多跑了几圈，并不影响结果。
         
-        slow = fast = head
-        
-        while fast is not None and fast.next is not None:
+        slow, fast = head, head
+        while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
-            
             if slow == fast:
-                slow = head
-                while fast != slow:
-                    fast = fast.next
+                fast = head  # 此时slow距离环口L个node  
+                while slow != fast:
                     slow = slow.next
+                    fast = fast.next
                 return slow
-
-        return None
+        return None  # 无环
 ```
 
 坑点
@@ -392,7 +418,7 @@ class Solution:
 - fast 如果初始化为 head.Next 则中点在 slow.Next
 - fast 初始化为 head,则中点在 slow
 
-### [palindrome-linked-list](https://leetcode-cn.com/problems/palindrome-linked-list/)
+### 234.[palindrome-linked-list](https://leetcode-cn.com/problems/palindrome-linked-list/)(easy)
 
 > 请判断一个链表是否为回文链表。
 
@@ -420,7 +446,7 @@ class Solution:
         return True
 ```
 
-### [copy-list-with-random-pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)
+### 138.[copy-list-with-random-pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)(medium)
 
 > 给定一个链表，每个节点包含一个额外增加的随机指针，该指针可以指向链表中的任何节点或空节点。
 > 要求返回这个链表的 深拷贝。
