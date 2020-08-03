@@ -505,31 +505,29 @@ class Solution:
 ```Python
 class Solution:
     def copyRandomList(self, head: 'Node') -> 'Node':
-        
         if head is None:
             return None
-        
         p = head
-        while p is not None:
+        while p:  # copy after old
             p.next = Node(p.val, p.next)
             p = p.next.next
-        
         p = head
-        while p is not None:
+        while p:
             if p.random is not None:
                 p.next.random = p.random.next
             p = p.next.next
         
-        new = head.next
-        o, n = head, new
-        while n.next is not None:
-            o.next = n.next
-            n.next = n.next.next
-            o = o.next
-            n = n.next
-        o.next = None
-        
-        return new
+        # segment
+        new_head = head.next  # must
+        old, new = head, head.next
+        while new.next:
+            old.next = new.next
+            new.next = new.next.next
+
+            old = old.next
+            new = new.next
+        old.next = None
+        return new_head
 ```
 
 ## 总结
