@@ -12,7 +12,7 @@
 
 ## Stack 栈
 
-[min-stack](https://leetcode-cn.com/problems/min-stack/)
+155.[min-stack](https://leetcode-cn.com/problems/min-stack/)(easy)
 
 > 设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
 
@@ -28,7 +28,7 @@ class MinStack:
         if len(self.stack) > 0:
             self.stack.append((x, min(x, self.stack[-1][1])))
         else:
-            self.stack.append((x, x))
+            self.stack.append((x, x))  # 当前值，当前值对应的min
 
     def pop(self) -> int:
         return self.stack.pop()[0]
@@ -38,9 +38,30 @@ class MinStack:
 
     def getMin(self) -> int:
         return self.stack[-1][1]
+        
+    #--------两个栈--------------
+        self.stack = []
+        self.min_stack = []  # 记录最小值的idx，如果对应idx的elem pop了就同步pop
+
+    def push(self, x: int) -> None:
+        self.stack.append(x)
+        if self.min_stack == [] or x < self.stack[self.min_stack[-1]]:
+            self.min_stack.append(len(self.stack)-1)  # 记录最小值第一次入栈的位置
+
+    def pop(self) -> None:
+        # 如果出栈的是最小值的最后一个
+        if len(self.stack)-1 == self.min_stack[-1]:
+            self.min_stack.pop()
+        return self.stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1] if self.stack else None
+
+    def getMin(self) -> int:
+        return self.stack[self.min_stack[-1]] if self.min_stack else None
 ```
 
-[evaluate-reverse-polish-notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+150.[evaluate-reverse-polish-notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)(medium)
 
 > **波兰表达式计算** > **输入:** ["2", "1", "+", "3", "*"] > **输出:** 9
 > **解释:** ((2 + 1) \* 3) = 9
@@ -51,34 +72,22 @@ class MinStack:
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
         
-        def comp(or1, op, or2):
-            if op == '+':
-                return or1 + or2
-            
-            if op == '-':
-                return or1 - or2
-            
-            if op == '*':
-                return or1 * or2
-            
-            if op == '/':
-                abs_result = abs(or1) // abs(or2)
-                return abs_result if or1 * or2 > 0 else -abs_result
-        
-        stack = []
-        
-        for token in tokens:
-            if token in ['+', '-', '*', '/']:
-                or2 = stack.pop()
-                or1 = stack.pop()
-                stack.append(comp(or1, token, or2))
+        # 数字在前，符号在后
+        # 数字和对应符合当即计算，结果参与后续计算
+        # 数字栈保存数字
+        nums = []
+        for i in tokens:
+            if i in '+-*/':  # 如果是运算符，立马就拿最近的两个num计算并入栈结果 
+                nxt = nums.pop()
+                prev = nums.pop()
+                res = str(int(eval(prev+i+nxt)))
+                nums.append(res)
             else:
-                stack.append(int(token))
-        
-        return stack[0]
+                nums.append(i)
+        return int(nums[-1])
 ```
 
-[decode-string](https://leetcode-cn.com/problems/decode-string/)
+394.[decode-string](https://leetcode-cn.com/problems/decode-string/)(medium)
 
 > 给定一个经过编码的字符串，返回它解码后的字符串。
 > s = "3[a]2[bc]", 返回 "aaabcbc".
@@ -129,7 +138,7 @@ def DFS(vertex):
     return
 ```
 
-[binary-tree-inorder-traversal](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+94.[binary-tree-inorder-traversal](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)(medium)
 
 > 给定一个二叉树，返回它的*中序*遍历。
 
@@ -154,7 +163,7 @@ class Solution:
         return inorder
 ```
 
-[clone-graph](https://leetcode-cn.com/problems/clone-graph/)
+133.[clone-graph](https://leetcode-cn.com/problems/clone-graph/)(medium)
 
 > 给你无向连通图中一个节点的引用，请你返回该图的深拷贝（克隆）。
 
@@ -214,7 +223,7 @@ class Solution:
 
 
 
-[number-of-islands](https://leetcode-cn.com/problems/number-of-islands/)
+200.[number-of-islands](https://leetcode-cn.com/problems/number-of-islands/)(medium)
 
 > 给定一个由  '1'（陆地）和 '0'（水）组成的的二维网格，计算岛屿的数量。一个岛被水包围，并且它是通过水平方向或垂直方向上相邻的陆地连接而成的。你可以假设网格的四个边均被水包围。
 
@@ -258,7 +267,7 @@ class Solution:
         return num_island
 ```
 
-[largest-rectangle-in-histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
+84.[largest-rectangle-in-histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)(hard)
 
 > 给定 _n_ 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
 > 求在该柱状图中，能够勾勒出来的矩形的最大面积。
@@ -347,7 +356,7 @@ class Solution:
 
 常用于 BFS 宽度优先搜索
 
-[implement-queue-using-stacks](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
+232.[implement-queue-using-stacks](https://leetcode-cn.com/problems/implement-queue-using-stacks/)(easy)
 
 > 使用栈实现队列
 
@@ -390,7 +399,7 @@ class MyQueue:
         return len(self.cache) == 0 and len(self.out) == 0
 ```
 
-[binary-tree-level-order-traversal](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)
+102.[binary-tree-level-order-traversal](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)(medium)
 
 > 二叉树的层序遍历
 
@@ -420,7 +429,7 @@ class Solution:
         return levels
 ```
 
-[01-matrix](https://leetcode-cn.com/problems/01-matrix/)
+542.[01-matrix](https://leetcode-cn.com/problems/01-matrix/)(medium)
 
 > 给定一个由 0 和 1 组成的矩阵，找出每个元素到最近的 0 的距离。
 > 两个相邻元素间的距离为 1
@@ -503,12 +512,12 @@ class Solution:
 
 ## 练习
 
-- [ ] [min-stack](https://leetcode-cn.com/problems/min-stack/)
-- [ ] [evaluate-reverse-polish-notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)
+- [ ] 155.[min-stack](https://leetcode-cn.com/problems/min-stack/)(easy)
+- [ ] 150.[evaluate-reverse-polish-notation](https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/)(medium)
 - [ ] [decode-string](https://leetcode-cn.com/problems/decode-string/)
 - [ ] [binary-tree-inorder-traversal](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 - [ ] [clone-graph](https://leetcode-cn.com/problems/clone-graph/)
 - [ ] [number-of-islands](https://leetcode-cn.com/problems/number-of-islands/)
 - [ ] [largest-rectangle-in-histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)
 - [ ] [implement-queue-using-stacks](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
-- [ ] [01-matrix](https://leetcode-cn.com/problems/01-matrix/)
+- [ ] 542.[01-matrix](https://leetcode-cn.com/problems/01-matrix/)(medium)
