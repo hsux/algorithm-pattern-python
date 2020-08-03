@@ -444,6 +444,24 @@ class Solution:
             slow = slow.next
             
         return True
+	# -----------------------------------
+        # all elem are pushed in stack
+        # compare each node.val
+        stack = []
+        p = head
+        while p:  # push
+            stack.append(p)
+            p = p.next
+        cnt = len(stack)
+        mid = cnt // 2
+        p = head
+        while mid:
+            tmp = stack.pop()  # pop
+            if tmp.val != p.val:  # compare
+                return False
+            p = p.next  # next node
+            mid -= 1 
+        return True  # include head is None
 ```
 
 ### 138.[copy-list-with-random-pointer](https://leetcode-cn.com/problems/copy-list-with-random-pointer/)(medium)
