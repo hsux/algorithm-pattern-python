@@ -118,6 +118,27 @@ class Solution:
                 stack_str[-1] += c
         
         return stack_str[0]
+        
+        # ----------2 stacks----------
+        stack = []
+        res = ''
+        multi = 0
+        for char in s:
+            if '0'<=char<='9':
+                multi = multi*10 +int(char)
+            # 开始处理括号内部，外部入栈,重新计数
+            elif char =='[':
+                stack.append((multi,res))  # 保留之前的所有字符串
+                res = ''
+                multi = 0
+            # 方框里的str拼接到res上
+            elif char == ']':
+                curr_m, prev_r = stack.pop()
+                res = prev_r + res * curr_m
+            # 字符直接加到res上
+            else:
+                res += char 
+        return res
 ```
 
 利用栈进行 DFS 迭代搜索模板
@@ -136,6 +157,31 @@ def DFS(vertex):
                 stack_dfs.append(n)
 
     return
+        # --------------递归法--------------
+        # 总体思路与辅助栈法一致，不同点在于将 [ 和 ] 分别作为递归的开启与终止条件：
+        # 当 s[i] == ']' 时，返回当前括号内记录的 res 字符串与 ] 的索引 i （更新上层递归指针位置）；
+        # 当 s[i] == '[' 时，开启新一层递归，记录此 [...] 内字符串 tmp 和递归后的最新索引 i，并执行 res + multi * tmp 拼接字符串。
+        # 遍历完毕后返回 res。
+        # 时间复杂度 O(N)O(N)O(N)，递归会更新索引，因此实际上还是一次遍历 s；
+        # 空间复杂度 O(N)O(N)O(N)，极端情况下递归深度将会达到线性级别。
+
+        def dfs(s, i):
+            res = ''  # 当前此层处理字符串结果
+            multi = 0  # 重复次数
+            while i < len(s):
+                if '0' <= s[i] <= '9':  # 数字加和
+                    multi = multi*10 +int(s[i])
+                elif s[i] == '[':  # 开始递归
+                    i, tmp = dfs(s, i+1)  # 统计[]内字符串，并返回已处理的位置防止重复处理
+                    res += multi * tmp  
+                    multi = 0  # reset
+                elif s[i] == ']':
+                    return i, res  # finish [],递归结束
+                else:
+                    res += s[i]  # 字符直接统计
+                i +=1  # next char
+            return res
+        return dfs(s,0)
 ```
 
 94.[binary-tree-inorder-traversal](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)(medium)
