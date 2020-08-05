@@ -218,23 +218,25 @@ class Solution:
 ```Python
 class Solution:
     def cloneGraph(self, start: 'Node') -> 'Node':
-        
-        if start is None:
-            return None
-        
-        visited = {start: Node(start.val, [])}
-        bfs = collections.deque([start])
-        
-        while len(bfs) > 0:
-            curr = bfs.popleft()
-            curr_copy = visited[curr]
-            for n in curr.neighbors:
-                if n not in visited:
-                    visited[n] = Node(n.val, [])
-                    bfs.append(n)
-                curr_copy.neighbors.append(visited[n])
-        
-        return visited[start]
+        # -------BFS------
+        # 从队列首部取出一个节点。
+        # 遍历该节点的所有邻接点。
+        # 如果某个邻接点已被访问，则该邻接点一定在 visited 中，那么从 visited 获得该邻接点。
+        # 否则，创建一个新的节点存储在 visited 中。
+        # 将克隆的邻接点添加到克隆图对应节点的邻接表中。
+        if node is None:
+            return node
+        queue = collections.deque([node])  # 保存待查邻域的node
+        visited = {node:Node(node.val,[])}  # 加入visited
+        while len(queue)>0:
+
+            tmp = queue.popleft()
+            for neighbor in tmp.neighbors:
+                if neighbor not in visited:  # 没有visit过则待查并备份已阅
+                    queue.append(neighbor)  # 待查邻域
+                    visited[neighbor] = Node(neighbor.val,[])  # 已阅备份
+                visited[tmp].neighbors.append(visited[neighbor])  # new node加入当前new node的邻域,不受已阅备份影响
+        return visited[node]
 ```
 
 - DFS iterative
@@ -265,6 +267,30 @@ class Solution:
                 dfs.pop()
         
         return visited[start]
+        
+        # -------DFS------
+        # 从给定节点开始遍历图。
+        # 使用一个 HashMap 存储所有已被访问和复制的节点。HashMap 中的 key 是原始图中的节点，value 是克隆图中的对应节点。
+        # 如果某个节点已经被访问过，则返回其克隆图中的对应节点。
+        # 如果当前访问的节点不在 HashMap 中，则创建它的克隆节点存储在 HashMap 中。注意：在进入递归之前，必须先创建克隆节点并保存在 HashMap 中。
+        # 如果不保证这种顺序，可能会在递归中再次遇到同一个节点，再次遍历该节点时，陷入死循环。
+        # 递归调用每个节点的邻接点。每个节点递归调用的次数等于邻接点的数量，每一次调用返回其对应邻接点的克隆节点，最终返回这些克隆邻接点的列表，将其放入对应克隆节点的邻接表中。这样就可以克隆给定的节点和其邻接点。
+
+        # 递归条件1
+        if not node:
+            return node
+        
+        # 递归条件2，如果已阅
+        if node in self.visited:
+            return self.visited[node]  # 返回对应的node副本
+        
+        # 如果未阅,创建node，变为已阅
+        self.visited[node] = Node(node.val, [])
+
+        if node.neighbors:  # 已阅包括探索邻域
+            self.visited[node].neighbors = [self.cloneGraph(n) for n in node.neighbors]
+        
+        return self.visited[node]  # 返回node副本
 ```
 
 
