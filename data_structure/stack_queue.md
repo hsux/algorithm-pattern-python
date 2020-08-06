@@ -287,7 +287,7 @@ class Solution:
         # 如果未阅,创建node，变为已阅
         self.visited[node] = Node(node.val, [])
 
-        if node.neighbors:  # 已阅包括探索邻域
+        if node.neighbors:  # 已阅包括探索邻域，处理分支
             self.visited[node].neighbors = [self.cloneGraph(n) for n in node.neighbors]
         
         return self.visited[node]  # 返回node副本
@@ -337,6 +337,32 @@ class Solution:
                     dfs_iter(i, j)
         
         return num_island
+        # -----------dfs------------
+        # 扫描整个二维网格。如果一个位置为 1，则以其为起始节点开始进行深度优先搜索。
+        # 在深度优先搜索的过程中，每个搜索到的 1 都会被重新标记为0
+        # 岛屿的数量就是我们进行深度优先搜索的次数
+        # 简言之，把每个孤岛化为一个点
+        nr = len(grid)
+        if nr == 0:
+            return 0
+        nc = len(grid[0])
+
+        num_island = 0
+        for i in range(nr):
+            for j in range(nc):
+                if grid[i][j] == '1':
+                    num_island += 1  # 计数
+                    self.dfs(grid,i,j)  # 该island全部注0
+        return num_island
+
+    def dfs(self, grid, r, c):
+        grid[r][c] = '0'  # visited过的node设为0
+        nr = len(grid)
+        nc = len(grid[0])
+        for x,y in [(r+1,c),(r-1,c),(r,c+1),(r,c-1)]:
+            if 0<=x<nr and 0<=y<nc and grid[x][y] == '1':
+                    self.dfs(grid,x,y)  # 如果是1，则进行注0
+        # 无返回需求
 ```
 
 84.[largest-rectangle-in-histogram](https://leetcode-cn.com/problems/largest-rectangle-in-histogram/)(hard)
