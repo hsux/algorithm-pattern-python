@@ -450,6 +450,34 @@ class Solution:
         return max_area
 ```
 
+思路4：从当前高度开始往两边扩展大于等于当前高度的，记录下所有width，计算height\*width作为当前高度的面积，与记录的最大面积比较。执行超时。时间、空间复杂度同蛮力法。
+
+```python
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        # 从某个高度开始往两边扩展，比当前高度高的都记录一个宽度，最后用当前高度×宽度
+        # 超时！
+        if heights is None :
+            return 0
+
+        max_area = 0
+        for i in range(len(heights)):  
+            width = 1
+            height = heights[i]
+            for l in range(i-1,-1,-1):
+                if heights[l] >= height:
+                    width += 1
+                else:
+                    break
+            for r in range(i+1,len(heights)):
+                if heights[r] >= height:
+                    width += 1
+                else:
+                    break
+            max_area = max(max_area, height*width)
+        return max_area
+```
+
 ## Queue 队列
 
 常用于 BFS 宽度优先搜索
