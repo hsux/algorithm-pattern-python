@@ -448,6 +448,27 @@ class Solution:
             max_area = max(max_area, heights[h] * (n - stack[-1] - 1))
         
         return max_area
+        
+        # ---------------------------------------------------------------
+        # 我们每遍历到当前柱体 i 时：
+        #   上述写法中，我们需要再嵌套一层 while 循环来向左找到第一个比柱体 i 高度小的柱体，这个过程是 O(N)O(N) 的；
+        #   那么我们可以 O(1)O(1) 的获取柱体 i 左边第一个比它小的柱体吗？答案就是单调增栈，因为对于栈中的柱体来说，栈中下一个柱体就是左边第一个高度小于自身的柱体。
+        # 因此做法就很简单了，我们遍历每个柱体，若当前的柱体高度大于等于栈顶柱体的高度，就直接将当前柱体入栈，否则若当前的柱体高度小于栈顶柱体的高度，说明当前栈顶柱体找到了右边的第一个小于自身的柱体，那么就可以将栈顶柱体出栈来计算以其为高的矩形的面积了。
+
+        # 通过对暴力法的改进
+        # 针对寻找左右两边比当前主体矮的第一个主体的序号，两者相减则为宽度
+        idx_stack = []
+        heights = [0] + heights + [0]
+        max_area = 0
+        for i in range(len(heights)):
+            # 栈不空，且栈顶h比当前h高，栈顶高度出栈，计算栈顶高度面积
+            while idx_stack and heights[idx_stack[-1]] > heights[i]:
+                h_idx = idx_stack.pop()
+                left_h = idx_stack[-1]
+                right_h = i
+                max_area = max(max_area,heights[h_idx]*(right_h-left_h-1))
+            idx_stack.append(i)  # 当前高度入栈
+        return max_area       
 ```
 
 思路4：从当前高度开始往两边扩展大于等于当前高度的，记录下所有width，计算height\*width作为当前高度的面积，与记录的最大面积比较。执行超时。时间、空间复杂度同蛮力法。
