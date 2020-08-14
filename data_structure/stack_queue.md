@@ -511,39 +511,49 @@ class Solution:
 class MyQueue:
 
     def __init__(self):
-        self.cache = []
-        self.out = []
+        """
+        Initialize your data structure here.
+        """
+        self.queue = []  # pop栈
+        self.bk_queue = []  # 备用栈
+
 
     def push(self, x: int) -> None:
         """
         Push element x to the back of queue.
         """
-        self.cache.append(x)
+        # 放入备用栈
+        self.bk_queue.append(x)
+
 
     def pop(self) -> int:
         """
         Removes the element from in front of queue and returns that element.
         """
-        if len(self.out) == 0:
-            while len(self.cache) > 0:
-                self.out.append(self.cache.pop())
-
-        return self.out.pop() 
+        # 如果pop栈为空，将备用栈数据导入pop栈形成FIFO
+        if not self.queue:
+            while self.bk_queue:
+                self.queue.append(self.bk_queue.pop())
+        # 从pop栈pop栈顶数据，如果pop栈为空返回None
+        return self.queue.pop() if self.queue else None
 
     def peek(self) -> int:
         """
         Get the front element.
         """
-        if len(self.out) > 0:
-            return self.out[-1]
-        else:
-            return self.cache[0]
+        # 同push函数
+        if not self.queue:
+            while self.bk_queue:
+                self.queue.append(self.bk_queue.pop())
+        return self.queue[-1] if self.queue else None
+
 
     def empty(self) -> bool:
         """
         Returns whether the queue is empty.
         """
-        return len(self.cache) == 0 and len(self.out) == 0
+        # 两个栈只要一个非空，则队列非空
+        return not (self.queue or self.bk_queue)
 ```
 
 102.[binary-tree-level-order-traversal](https://leetcode-cn.com/problems/binary-tree-level-order-traversal/)(medium)
@@ -582,6 +592,8 @@ class Solution:
 > 两个相邻元素间的距离为 1
 
 思路 1: 从 0 开始 BFS, 遇到距离最小值需要更新的则更新后重新入队更新后续结点
+
+参考： https://leetcode-cn.com/problems/01-matrix/solution/tao-lu-da-jie-mi-gao-dong-ti-mu-kao-cha-shi-yao-2/
 
 ```Python
 class Solution:
